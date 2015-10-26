@@ -18,7 +18,7 @@ namespace Aplikasi_Operasi_Pixel
     public partial class Form1 : Form
     {
         Bitmap gambar_awal, gambar_tampung, gambar_tmp, gambar_akhir;
-        Image<Bgr, Byte> gambar_awal_e, gambar_akhir_e, gambar_tmp_e;
+        Image<Bgr, Byte> gambar_awal_e, gambar_tampung_e, gambar_tmp_e, gambar_akhir_e;
         int brignes, kontras; //temp
         GraphPane histogram_awal, histogram_akhir;
         int mode;
@@ -55,6 +55,9 @@ namespace Aplikasi_Operasi_Pixel
             histogram_akhir.Title = "Histogram Gambar Akhir";
             histogram_akhir.YAxis.Title = "Jumlah Pixel";
             histogram_akhir.XAxis.Title = "Nilai Pixel";
+
+            button3.Enabled = false;
+            button4.Enabled = false;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -69,6 +72,17 @@ namespace Aplikasi_Operasi_Pixel
                 else if (mode == 2)
                 {
                     operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
+                }
+
+                if(trackBar1.Value==0&&trackBar2.Value==10)
+                {
+                    button3.Enabled = false;
+                    button4.Enabled = false;
+                }
+                else if(!(trackBar1.Value==0&&trackBar2.Value==10))
+                {
+                    button3.Enabled = true;
+                    button4.Enabled = true;
                 }
             }
             
@@ -87,6 +101,17 @@ namespace Aplikasi_Operasi_Pixel
                 {
                     operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
                 }
+
+                if (trackBar1.Value == 0 && trackBar2.Value == 10)
+                {
+                    button3.Enabled = false;
+                    button4.Enabled = false;
+                }
+                else if (!(trackBar1.Value == 0 && trackBar2.Value == 10))
+                {
+                    button3.Enabled = true;
+                    button4.Enabled = true;
+                }
             } 
         }
 
@@ -97,7 +122,7 @@ namespace Aplikasi_Operasi_Pixel
             if(pilih_gambar.ShowDialog()==DialogResult.OK)
             {
                 gambar_awal_e = new Image<Bgr, byte>(pilih_gambar.FileName);
-                gambar_akhir_e = new Image<Bgr, byte>(pilih_gambar.FileName);
+                gambar_tampung_e = new Image<Bgr, byte>(pilih_gambar.FileName);
                 gambar_tmp_e = new Image<Bgr, byte>(pilih_gambar.FileName);
 
                 gambar_awal = new Bitmap(new Bitmap(pilih_gambar.FileName));
@@ -150,8 +175,8 @@ namespace Aplikasi_Operasi_Pixel
 
         private void operasi_pixel_emgu(int kecerahan, float kekontrasan)
         {
-            gambar_akhir_e = (kekontrasan * gambar_awal_e) + kecerahan;
-            pictureBox2.Image = gambar_akhir_e.ToBitmap();   
+            gambar_tampung_e = (kekontrasan * gambar_awal_e) + kecerahan;
+            pictureBox2.Image = gambar_tampung_e.ToBitmap();   
         }
 
         private void ubah_ke_negatif_primitif()
@@ -186,9 +211,9 @@ namespace Aplikasi_Operasi_Pixel
             textBox1.Text = "0";
             textBox2.Text = "1";
             //gambar_akhir_e = gambar_awal_e.Not();
-            gambar_akhir_e = 255-gambar_awal_e;
-            gambar_awal_e = gambar_akhir_e.Clone();
-            pictureBox2.Image = gambar_akhir_e.ToBitmap();
+            gambar_tampung_e = 255-gambar_awal_e;
+            gambar_awal_e = gambar_tampung_e.Clone();
+            pictureBox2.Image = gambar_tampung_e.ToBitmap();
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
@@ -237,7 +262,7 @@ namespace Aplikasi_Operasi_Pixel
                         {
                             comboBox2.Visible = false;
                             histogram_akhir.CurveList.Clear();
-                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                            membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "luminositi");
                             zedGraphControl2.AxisChange();
                             zedGraphControl2.Refresh();
                         }    
@@ -258,7 +283,7 @@ namespace Aplikasi_Operasi_Pixel
                             comboBox2.Visible = true;
                             comboBox2.Text = "Gabungan";
                             histogram_akhir.CurveList.Clear();
-                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                            membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "gabungan");
                             zedGraphControl2.AxisChange();
                             zedGraphControl2.Refresh();
                         }
@@ -298,7 +323,7 @@ namespace Aplikasi_Operasi_Pixel
                         {
                             comboBox2.Visible = false;
                             histogram_akhir.CurveList.Clear();
-                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                            membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "luminositi");
                             zedGraphControl2.AxisChange();
                             zedGraphControl2.Refresh();
                         }
@@ -319,7 +344,7 @@ namespace Aplikasi_Operasi_Pixel
                             comboBox2.Visible = true;
                             comboBox2.Text = "Gabungan";
                             histogram_akhir.CurveList.Clear();
-                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                            membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "gabungan");
                             zedGraphControl2.AxisChange();
                             zedGraphControl2.Refresh();
                         }
@@ -500,7 +525,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         //Rumus membuat histogram gabungan BELUM SELESAI...
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "gabungan");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -508,7 +533,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         //Rumus membuat histogram red BELUM SELESAI...
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "red");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "red");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -516,7 +541,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         //Rumus membuat histogram green BELUM SELESAI...
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "green");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "green");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -524,7 +549,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         //Rumus membuat histogram blue BELUM SELESAI...
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "blue");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "blue");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -900,7 +925,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         comboBox2.Visible = false;
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "luminositi");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -930,7 +955,7 @@ namespace Aplikasi_Operasi_Pixel
                         comboBox2.Visible = true;
                         comboBox2.Text = "Gabungan";
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "gabungan");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -956,7 +981,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         comboBox2.Visible = false;
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "luminositi");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -980,7 +1005,7 @@ namespace Aplikasi_Operasi_Pixel
                         comboBox2.Visible = true;
                         comboBox2.Text = "Gabungan";
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "gabungan");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -1006,7 +1031,7 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         comboBox2.Visible = false;
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "luminositi");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -1030,7 +1055,7 @@ namespace Aplikasi_Operasi_Pixel
                         comboBox2.Visible = true;
                         comboBox2.Text = "Gabungan";
                         histogram_akhir.CurveList.Clear();
-                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                        membuat_histogram_emgu(gambar_tampung_e, histogram_akhir, "gabungan");
                         zedGraphControl2.AxisChange();
                         zedGraphControl2.Refresh();
                     }
@@ -1055,6 +1080,17 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
                     }
+
+                    if (trackBar1.Value == 0 && trackBar2.Value == 10)
+                    {
+                        button3.Enabled = false;
+                        button4.Enabled = false;
+                    }
+                    else if (!(trackBar1.Value == 0 && trackBar2.Value == 10))
+                    {
+                        button3.Enabled = true;
+                        button4.Enabled = true;
+                    }
                 }
             }
             catch
@@ -1078,6 +1114,17 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
                     }
+
+                    if (trackBar1.Value == 0 && trackBar2.Value == 10)
+                    {
+                        button3.Enabled = false;
+                        button4.Enabled = false;
+                    }
+                    else if (!(trackBar1.Value == 0 && trackBar2.Value == 10))
+                    {
+                        button3.Enabled = true;
+                        button4.Enabled = true;
+                    }
                 }
             }
             catch
@@ -1088,25 +1135,75 @@ namespace Aplikasi_Operasi_Pixel
 
         private void button3_Click(object sender, EventArgs e)
         {
-            brignes = trackBar1.Value;
-            kontras = trackBar2.Value;
-            gambar_tmp = (Bitmap)gambar_awal.Clone();
-            gambar_akhir = (Bitmap)gambar_tampung.Clone();
-            gambar_awal = (Bitmap)gambar_akhir.Clone();
-            trackBar1.Value = 0;
-            textBox1.Text = trackBar1.Value.ToString();
-            trackBar2.Value = 10;
-            textBox2.Text = (trackBar2.Value/10).ToString();
+            if(mode==1)
+            {
+                brignes = trackBar1.Value;
+                kontras = trackBar2.Value;
+                gambar_tmp = (Bitmap)gambar_awal.Clone();
+                gambar_akhir = (Bitmap)gambar_tampung.Clone();
+                gambar_awal = (Bitmap)gambar_akhir.Clone();
+                trackBar1.Value = 0;
+                textBox1.Text = trackBar1.Value.ToString();
+                trackBar2.Value = 10;
+                textBox2.Text = (trackBar2.Value / 10).ToString();
+            }
+            else if(mode==2)
+            {
+                brignes = trackBar1.Value;
+                kontras = trackBar2.Value;
+                gambar_tmp_e = gambar_awal_e;
+                gambar_akhir_e = gambar_tampung_e;
+                gambar_awal_e = gambar_akhir_e;
+                trackBar1.Value = 0;
+                textBox1.Text = trackBar1.Value.ToString();
+                trackBar2.Value = 10;
+                textBox2.Text = (trackBar2.Value / 10).ToString();
+            }
+
+            if (trackBar1.Value == 0 && trackBar2.Value == 10)
+            {
+                button3.Enabled = false;
+                button4.Enabled = false;
+            }
+            else if (!(trackBar1.Value == 0 && trackBar2.Value == 10))
+            {
+                button3.Enabled = true;
+                button4.Enabled = true;
+            }
+            radioButton2.Checked = true;
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            gambar_tampung = (Bitmap)gambar_tmp.Clone();
-            pictureBox2.Image = gambar_tampung;
-            trackBar1.Value = 0;
-            textBox1.Text = trackBar1.Value.ToString();
-            trackBar2.Value = 10;
-            textBox2.Text = (trackBar2.Value / 10).ToString();
+            if(mode==1)
+            {
+                gambar_tampung = (Bitmap)gambar_tmp.Clone();
+                pictureBox2.Image = gambar_tampung;
+                trackBar1.Value = 0;
+                textBox1.Text = trackBar1.Value.ToString();
+                trackBar2.Value = 10;
+                textBox2.Text = (trackBar2.Value / 10).ToString();
+            }
+            else if(mode==2)
+            {
+                gambar_tampung_e = gambar_tmp_e;
+                pictureBox2.Image = gambar_tampung_e.ToBitmap();
+                trackBar1.Value = 0;
+                textBox1.Text = trackBar1.Value.ToString();
+                trackBar2.Value = 10;
+                textBox2.Text = (trackBar2.Value / 10).ToString();
+            }
+
+            if (trackBar1.Value == 0 && trackBar2.Value == 10)
+            {
+                button3.Enabled = false;
+                button4.Enabled = false;
+            }
+            else if (!(trackBar1.Value == 0 && trackBar2.Value == 10))
+            {
+                button3.Enabled = true;
+                button4.Enabled = true;
+            }
         }
 
     }
