@@ -220,6 +220,48 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         ubah_ke_negatif_emgu();
                     }
+
+                    //tampil zedgraph 2
+                    if (radioButton7.Checked)
+                    {  
+                        if (mode == 1)
+                        {
+                            comboBox2.Visible = false;
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_primitif(gambar_akhir, histogram_akhir, "luminositi");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                        else if (mode == 2)
+                        {
+                            comboBox2.Visible = false;
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }    
+                    }
+                    else if (radioButton8.Checked)
+                    {
+                        if (mode == 1)
+                        {
+                            comboBox2.Visible = true;
+                            comboBox2.Text = "Gabungan";
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_primitif(gambar_akhir, histogram_akhir, "gabungan");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                        else if (mode == 2)
+                        {
+                            comboBox2.Visible = true;
+                            comboBox2.Text = "Gabungan";
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                    }
                 }      
             }
         }
@@ -240,6 +282,47 @@ namespace Aplikasi_Operasi_Pixel
                     {
                         operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
                     }
+                    //tampil zedgraph 2
+                    if (radioButton7.Checked)
+                    {
+                        if (mode == 1)
+                        {
+                            comboBox2.Visible = false;
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_primitif(gambar_akhir, histogram_akhir, "luminositi");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                        else if (mode == 2)
+                        {
+                            comboBox2.Visible = false;
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                    }
+                    else if (radioButton8.Checked)
+                    {
+                        if (mode == 1)
+                        {
+                            comboBox2.Visible = true;
+                            comboBox2.Text = "Gabungan";
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_primitif(gambar_akhir, histogram_akhir, "gabungan");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                        else if (mode == 2)
+                        {
+                            comboBox2.Visible = true;
+                            comboBox2.Text = "Gabungan";
+                            histogram_akhir.CurveList.Clear();
+                            membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                            zedGraphControl2.AxisChange();
+                            zedGraphControl2.Refresh();
+                        }
+                    }
                 }                
             }
         }
@@ -248,7 +331,7 @@ namespace Aplikasi_Operasi_Pixel
         {
             if(e.KeyCode==Keys.Enter)
             {
-                if (pictureBox1.Image != null)
+                try
                 {
                     trackBar1.Value = Convert.ToInt16(textBox1.Text);
                     if (mode == 1)
@@ -261,6 +344,10 @@ namespace Aplikasi_Operasi_Pixel
                     }
 
                 }
+                catch (Exception gagal)
+                {
+
+                }
             }
         }
 
@@ -268,7 +355,7 @@ namespace Aplikasi_Operasi_Pixel
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (pictureBox1.Image != null)
+                try
                 {
                     decimal tmp;
                     tmp = Convert.ToDecimal(textBox2.Text) * 10;
@@ -282,7 +369,12 @@ namespace Aplikasi_Operasi_Pixel
                         operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
                     }
                 }
+                catch (Exception gagal)
+                {
+
+                }
             }
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -724,13 +816,17 @@ namespace Aplikasi_Operasi_Pixel
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!(Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back) || (e.KeyChar.ToString() == "-")))
+            {
                 e.Handled = true;
+            }
         }
 
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!(Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back) || (e.KeyChar.ToString() == ".")))
+            {
                 e.Handled = true;
+            }           
         }
 
         private void radioButton5_CheckedChanged(object sender, EventArgs e)
@@ -838,6 +934,154 @@ namespace Aplikasi_Operasi_Pixel
                         zedGraphControl2.Refresh();
                     }
                 }
+            }
+        }
+
+        private void trackBar1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (radioButton7.Checked)
+            {
+                if (gambar_akhir != null)
+                {
+                    if (mode == 1)
+                    {
+                        comboBox2.Visible = false;
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_primitif(gambar_akhir, histogram_akhir, "luminositi");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                    else if (mode == 2)
+                    {
+                        comboBox2.Visible = false;
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                }
+            }
+            else if (radioButton8.Checked)
+            {
+                if (gambar_akhir != null)
+                {
+                    if (mode == 1)
+                    {
+                        comboBox2.Visible = true;
+                        comboBox2.Text = "Gabungan";
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_primitif(gambar_akhir, histogram_akhir, "gabungan");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                    else if (mode == 2)
+                    {
+                        comboBox2.Visible = true;
+                        comboBox2.Text = "Gabungan";
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                }
+            }
+        }
+
+        private void trackBar2_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (radioButton7.Checked)
+            {
+                if (gambar_akhir != null)
+                {
+                    if (mode == 1)
+                    {
+                        comboBox2.Visible = false;
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_primitif(gambar_akhir, histogram_akhir, "luminositi");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                    else if (mode == 2)
+                    {
+                        comboBox2.Visible = false;
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "luminositi");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                }
+            }
+            else if (radioButton8.Checked)
+            {
+                if (gambar_akhir != null)
+                {
+                    if (mode == 1)
+                    {
+                        comboBox2.Visible = true;
+                        comboBox2.Text = "Gabungan";
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_primitif(gambar_akhir, histogram_akhir, "gabungan");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                    else if (mode == 2)
+                    {
+                        comboBox2.Visible = true;
+                        comboBox2.Text = "Gabungan";
+                        histogram_akhir.CurveList.Clear();
+                        membuat_histogram_emgu(gambar_akhir_e, histogram_akhir, "gabungan");
+                        zedGraphControl2.AxisChange();
+                        zedGraphControl2.Refresh();
+                    }
+                }
+            }
+        }
+
+        private void textBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (pictureBox1.Image != null)
+                {
+                    decimal tmp;
+                    tmp = Convert.ToDecimal(textBox2.Text) * 10;
+                    trackBar2.Value = (int)tmp;
+                    if (mode == 1)
+                    {
+                        operasi_pixel_primitif(trackBar1.Value, (float)trackBar2.Value / 10F);
+                    }
+                    else if (mode == 2)
+                    {
+                        operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
+                    }
+                }
+            }
+            catch(Exception gagal)
+            {
+
+            }
+        }
+
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (pictureBox1.Image != null)
+                {
+                    trackBar1.Value = Convert.ToInt16(textBox1.Text);
+                    if (mode == 1)
+                    {
+                        operasi_pixel_primitif(trackBar1.Value, (float)trackBar2.Value / 10F);
+                    }
+                    else if (mode == 2)
+                    {
+                        operasi_pixel_emgu(trackBar1.Value, (float)trackBar2.Value / 10F);
+                    }
+                }
+            }
+            catch(Exception gagal)
+            {
+
             }
         }
     }

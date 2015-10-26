@@ -232,6 +232,7 @@
             this.textBox2.TabIndex = 4;
             this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyDown);
             this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
+            this.textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyUp);
             // 
             // label2
             // 
@@ -251,6 +252,7 @@
             this.trackBar2.TabIndex = 100;
             this.trackBar2.Value = 10;
             this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            this.trackBar2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar2_MouseUp);
             // 
             // groupBox1
             // 
@@ -272,6 +274,7 @@
             this.textBox1.TabIndex = 4;
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
             // 
             // label1
             // 
@@ -291,6 +294,7 @@
             this.trackBar1.Size = new System.Drawing.Size(149, 45);
             this.trackBar1.TabIndex = 100;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
             // 
             // button1
             // 
