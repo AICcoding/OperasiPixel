@@ -1084,5 +1084,6 @@ namespace Aplikasi_Operasi_Pixel
 
             }
         }
+
     }
 }
