@@ -20,6 +20,7 @@ namespace Aplikasi_Operasi_Pixel
         Bitmap gambar_awal, gambar_tampung, gambar_tmp, gambar_akhir;
         Image<Bgr, Byte> gambar_awal_e, gambar_tampung_e, gambar_tmp_e, gambar_akhir_e;
         int brignes, kontras; //temp
+        bool non_linear;
         GraphPane histogram_awal, histogram_akhir;
         int mode;
         public Form1()
@@ -58,6 +59,8 @@ namespace Aplikasi_Operasi_Pixel
 
             button3.Enabled = false;
             button4.Enabled = false;
+
+            non_linear = false;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -124,10 +127,12 @@ namespace Aplikasi_Operasi_Pixel
                 gambar_awal_e = new Image<Bgr, byte>(pilih_gambar.FileName);
                 gambar_tampung_e = new Image<Bgr, byte>(pilih_gambar.FileName);
                 gambar_tmp_e = new Image<Bgr, byte>(pilih_gambar.FileName);
+                gambar_akhir_e = new Image<Bgr, byte>(pilih_gambar.FileName);
 
-                gambar_awal = new Bitmap(new Bitmap(pilih_gambar.FileName));
-                gambar_tampung = new Bitmap(new Bitmap(pilih_gambar.FileName));
-                gambar_tmp = new Bitmap(new Bitmap(pilih_gambar.FileName));
+                gambar_awal = new Bitmap(new Bitmap(pilih_gambar.FileName)); //gambar patokan pengolahan
+                gambar_tampung = new Bitmap(new Bitmap(pilih_gambar.FileName)); //gambar hasil pengolahan
+                gambar_tmp = new Bitmap(new Bitmap(pilih_gambar.FileName)); //gambar asli
+                gambar_akhir = new Bitmap(new Bitmap(pilih_gambar.FileName)); //gambar sebelum diedit
 
                 pictureBox1.Image = gambar_awal;
                 if(mode==1)
@@ -201,7 +206,6 @@ namespace Aplikasi_Operasi_Pixel
             }
             gambar_awal = (Bitmap)gambar_tampung.Clone();
             pictureBox2.Image = gambar_tampung;
-
         }
 
         private void ubah_ke_negatif_emgu()
@@ -804,39 +808,60 @@ namespace Aplikasi_Operasi_Pixel
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Hati-hati!!!\nGambar akan menjadi hitam.\nApakah anda yakin ingin melanjutkannya ? ", "Peringatan", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, 0) == DialogResult.OK)
+            /*if(MessageBox.Show("Hati-hati!!!\nGambar akan menjadi hitam.\nApakah anda yakin ingin melanjutkannya ? ", "Peringatan", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, 0) == DialogResult.OK)
             {
-                MessageBox.Show("SELAMAT DATANG DI LINGKARAN SETAN!!");
-                int r, g, b;
-                Double tmp;
-                for (int i = 0; i < gambar_awal.Width; i++)
+                MessageBox.Show("SELAMAT DATANG DI LINGKARAN SETAN!!");*/
+                
+                if(non_linear==false)
                 {
-                    for (int j = 0; j < gambar_awal.Height; j++)
+                    int r, g, b;
+                    //Bgr piksel;
+                    Double tmp;
+                    for (int i = 0; i < gambar_awal.Width; i++)
                     {
-                        tmp = Math.Log(1 + Convert.ToDouble(gambar_awal.GetPixel(i, j).R));
-                        r = (int)tmp;
-                        if (r > 255) r = 255;
-                        else if (r < 0) r = 0;
+                        for (int j = 0; j < gambar_awal.Height; j++)
+                        {
+                            tmp = Math.Log(1 + Convert.ToDouble(gambar_awal.GetPixel(i, j).R));
+                            r = (int)tmp;
+                            if (r > 255) r = 255;
+                            else if (r < 0) r = 0;
 
-                        tmp = Math.Log(1 + Convert.ToDouble(gambar_awal.GetPixel(i, j).G));
-                        g = (int)tmp;
-                        if (g > 255) g = 255;
-                        else if (g < 0) g = 0;
+                            tmp = Math.Log(1 + Convert.ToDouble(gambar_awal.GetPixel(i, j).G));
+                            g = (int)tmp;
+                            if (g > 255) g = 255;
+                            else if (g < 0) g = 0;
 
-                        tmp = Math.Log(1 + Convert.ToDouble(gambar_awal.GetPixel(i, j).B));
-                        b = (int)tmp;
-                        if (b > 255) b = 255;
-                        else if (b < 0) b = 0;
+                            tmp = Math.Log(1 + Convert.ToDouble(gambar_awal.GetPixel(i, j).B));
+                            b = (int)tmp;
+                            if (b > 255) b = 255;
+                            else if (b < 0) b = 0;
 
-                        gambar_tampung.SetPixel(i, j, Color.FromArgb(r, g, b));
+                            gambar_tampung.SetPixel(i, j, Color.FromArgb(r, g, b));
+                            /*piksel.Blue=b;
+                            piksel.Red=r;
+                            piksel.Green=g;
+                            gambar_tampung_e.Data = piksel.Red;*/
+                        }
                     }
+                    gambar_awal = (Bitmap)gambar_tampung.Clone();
+                    pictureBox2.Image = gambar_tampung;
+
+                    non_linear = true;
                 }
-                pictureBox2.Image = gambar_tampung;
-            }
-            else
+                else if(non_linear==true)
+                {
+                    gambar_awal = gambar_tmp;
+
+                    pictureBox2.Image = gambar_awal;
+                    non_linear = false;
+                }
+                
+
+            //}
+            /*else
             {
                 MessageBox.Show("SELAMAT ANDA KELUAR DARI LINGKARAN SETAN!!");
-            }
+            }*/
         }
             
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -1177,7 +1202,9 @@ namespace Aplikasi_Operasi_Pixel
         {
             if(mode==1)
             {
-                gambar_tampung = (Bitmap)gambar_tmp.Clone();
+                //gambar_tampung = (Bitmap)gambar_tmp.Clone();
+                gambar_tampung = (Bitmap)gambar_akhir.Clone();
+
                 pictureBox2.Image = gambar_tampung;
                 trackBar1.Value = 0;
                 textBox1.Text = trackBar1.Value.ToString();
@@ -1186,7 +1213,9 @@ namespace Aplikasi_Operasi_Pixel
             }
             else if(mode==2)
             {
-                gambar_tampung_e = gambar_tmp_e;
+                //gambar_tampung_e = gambar_tmp_e;
+                gambar_tampung_e = gambar_akhir_e;
+
                 pictureBox2.Image = gambar_tampung_e.ToBitmap();
                 trackBar1.Value = 0;
                 textBox1.Text = trackBar1.Value.ToString();
