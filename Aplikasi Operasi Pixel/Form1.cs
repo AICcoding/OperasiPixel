@@ -23,6 +23,7 @@ namespace Aplikasi_Operasi_Pixel
         bool non_linear;
         GraphPane histogram_awal, histogram_akhir;
         int mode;
+
         public Form1()
         {
             InitializeComponent();
